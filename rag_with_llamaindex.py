@@ -4,10 +4,9 @@ from llama_index.core.node_parser import SimpleNodeParser
 from llama_index.core.evaluation import RetrieverEvaluator
 from llama_index.llms.openai import OpenAI
 
-import os
 import streamlit as st
 
-os.environ['OPENAI_API_KEY'] = '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'
+openai.api_key = st.secrets.openai_key
 
 st.title("HỆ THỐNG TƯ VẤN TUYỂN SINH")
 
