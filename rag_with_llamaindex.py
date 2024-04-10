@@ -5,6 +5,7 @@ from llama_index.core.evaluation import RetrieverEvaluator
 from llama_index.llms.openai import OpenAI
 
 import streamlit as st
+import openai
 
 openai.api_key = st.secrets.openai_key
 
