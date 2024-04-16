@@ -22,10 +22,10 @@ if "conversation_history" not in st.session_state.keys() or st.sidebar.button("C
   st.session_state.conversation_history = []
 
 # New Conversation button with a unique key
-#new_conversation_button = sidebar.button("Cuộc trò chuyện mới", key="new_conversation")
+new_conversation_button = sidebar.button("Cuộc trò chuyện mới", key="new_conversation")
 
-#if new_conversation_button:  # Reset conversation on button click
-    #st.session_state.messages = []
+if new_conversation_button:  # Reset conversation on button click
+    st.session_state.messages = []
 
 @st.cache_resource(show_spinner=False)
 def load_data():
