@@ -11,11 +11,19 @@ openai.api_key = st.secrets.openai_key
 
 st.title("HỆ THỐNG TƯ VẤN TUYỂN SINH")
 
+sidebar = st.sidebar
+
 if "messages" not in st.session_state.keys(): # Initialize the chat messages history
     st.session_state.messages = [
         {"role": "assistant", "content": "Tôi có thể tư vấn gì cho bạn?"}
     ]
 
+if "conversation_history" not in st.session_state.keys():
+  st.session_state.conversation_history = []
+
+sidebar.button("Cuộc trò chuyện mới")
+if sidebar.button("Cuộc trò chuyện mới"): # Initialize the new conversation
+  st.session_state.messages = []
 
 @st.cache_resource(show_spinner=False)
 def load_data():
@@ -34,7 +42,6 @@ def load_data():
 
 index = load_data()
 
-#query_engine = vector_index.as_query_engine(similarity_top_k=2)
 if "chat_engine" not in st.session_state.keys(): # Initialize the chat engine
         st.session_state.chat_engine = index.as_chat_engine(chat_mode="condense_plus_context", verbose=True)
 
@@ -53,3 +60,13 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.write(response.response)
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message) # Add response to message history
+            st.session_state.conversation_history.append(st.session_state.messages.copy())
+
+with st.sidebar.expander("Conversation History"):
+  for conversation in st.session_state.conversation_history:
+    for message in conversation:
+      if message["role"] == "user":
+        st.write("Bạn: " + message["content"])
+      else:
+        st.write("Chatbot: " + message["content"])
+    st.write("----")  # Separator between conversations
