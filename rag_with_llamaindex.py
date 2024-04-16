@@ -64,7 +64,7 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.session_state.messages.append(message) # Add response to message history
             st.session_state.conversation_history.append(st.session_state.messages.copy()) # Append conversation history
 
-with st.sidebar.expander("Conversation History", key="conversation_history"):
+with st.sidebar.expander("Conversation History"):
     for conversation in st.session_state.conversation_history:
         for message in conversation:
             if message["role"] == "user":
