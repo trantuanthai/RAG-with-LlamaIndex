@@ -21,9 +21,11 @@ if "messages" not in st.session_state.keys(): # Initialize the chat messages his
 if "conversation_history" not in st.session_state.keys():
   st.session_state.conversation_history = []
 
-sidebar.button("Cuộc trò chuyện mới")
-if sidebar.button("Cuộc trò chuyện mới"): # Initialize the new conversation
-  st.session_state.messages = []
+# New Conversation button with a unique key
+new_conversation_button = sidebar.button("Cuộc trò chuyện mới", key="new_conversation")
+
+if new_conversation_button:  # Reset conversation on button click
+    st.session_state.messages = []
 
 @st.cache_resource(show_spinner=False)
 def load_data():
@@ -60,13 +62,13 @@ if st.session_state.messages[-1]["role"] != "assistant":
             st.write(response.response)
             message = {"role": "assistant", "content": response.response}
             st.session_state.messages.append(message) # Add response to message history
-            st.session_state.conversation_history.append(st.session_state.messages.copy())
+            st.session_state.conversation_history.append(st.session_state.messages.copy()) # Append conversation history
 
-with st.sidebar.expander("Conversation History"):
-  for conversation in st.session_state.conversation_history:
-    for message in conversation:
-      if message["role"] == "user":
-        st.write("Bạn: " + message["content"])
-      else:
-        st.write("Chatbot: " + message["content"])
-    st.write("----")  # Separator between conversations
+with st.sidebar.expander("Conversation History", key="conversation_history"):
+    for conversation in st.session_state.conversation_history:
+        for message in conversation:
+            if message["role"] == "user":
+                st.write("Bạn: " + message["content"])
+            else:
+                st.write("Chatbot: " + message["content"])
+        st.write("----")  # Separator between conversations
