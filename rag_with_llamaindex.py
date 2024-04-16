@@ -78,6 +78,12 @@ with history_container:
           chat_message(message)
       st.write("----")  # Separator between conversations
 
+def chat_message(message):
+  if message["role"] == "user":
+    st.write("Bạn: " + message["content"])
+  else:
+    st.write("Chatbot: " + message["content"])
+
 #for message in st.session_state.messages: # Display the prior chat messages
     #with st.chat_message(message["role"]):
         #st.write(message["content"])
