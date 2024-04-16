@@ -18,14 +18,14 @@ if "messages" not in st.session_state.keys(): # Initialize the chat messages his
         {"role": "assistant", "content": "Tôi có thể tư vấn gì cho bạn?"}
     ]
 
-if "conversation_history" not in st.session_state.keys():
+if "conversation_history" not in st.session_state.keys() or st.sidebar.button("Cuộc trò chuyện mới"):
   st.session_state.conversation_history = []
 
 # New Conversation button with a unique key
-new_conversation_button = sidebar.button("Cuộc trò chuyện mới", key="new_conversation")
+#new_conversation_button = sidebar.button("Cuộc trò chuyện mới", key="new_conversation")
 
-if new_conversation_button:  # Reset conversation on button click
-    st.session_state.messages = []
+#if new_conversation_button:  # Reset conversation on button click
+    #st.session_state.messages = []
 
 @st.cache_resource(show_spinner=False)
 def load_data():
