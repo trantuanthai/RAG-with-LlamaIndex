@@ -18,7 +18,7 @@ if "messages" not in st.session_state.keys(): # Initialize the chat messages his
         {"role": "assistant", "content": "Tôi có thể tư vấn gì cho bạn?"}
     ]
 
-if "conversation_history" not in st.session_state.keys() or st.sidebar.button("Cuộc trò chuyện mới"):
+if "conversation_history" not in st.session_state.keys():
   st.session_state.conversation_history = []
 
 # New Conversation button with a unique key
@@ -50,25 +50,53 @@ if "chat_engine" not in st.session_state.keys(): # Initialize the chat engine
 if prompt := st.chat_input("Câu hỏi"): # Prompt for user input and save to chat history
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-for message in st.session_state.messages: # Display the prior chat messages
-    with st.chat_message(message["role"]):
-        st.write(message["content"])
+# Display the current chat conversation
+chat_container = st.empty()
+
+for message in st.session_state.messages:
+  with chat_container:
+    chat_message(message)
+
+# Append conversation history even for new conversations
+if st.session_state.messages[-1]["role"] != "assistant":
+  with chat_container:
+    response = st.session_state.chat_engine.chat(prompt)
+    chat_message({"role": "assistant", "content": response.response})
+    st.session_state.messages.append({"role": "assistant", "content": response.response})
+    st.session_state.conversation_history.append(st.session_state.messages.copy())
+
+# Display the conversation history in a separate container
+history_container = st.empty()
+
+with history_container:
+  # Display conversation history only if there are previous conversations
+  if st.session_state.conversation_history:
+    for conversation in st.session_state.conversation_history:
+      chat_history_container = st.empty()
+      for message in conversation:
+        with chat_history_container:
+          chat_message(message)
+      st.write("----")  # Separator between conversations
+
+#for message in st.session_state.messages: # Display the prior chat messages
+    #with st.chat_message(message["role"]):
+        #st.write(message["content"])
 
 # If last message is not from assistant, generate a new response
-if st.session_state.messages[-1]["role"] != "assistant":
-    with st.chat_message("assistant"):
-        with st.spinner("..."):
-            response = st.session_state.chat_engine.chat(prompt)
-            st.write(response.response)
-            message = {"role": "assistant", "content": response.response}
-            st.session_state.messages.append(message) # Add response to message history
-            st.session_state.conversation_history.append(st.session_state.messages.copy()) # Append conversation history
+#if st.session_state.messages[-1]["role"] != "assistant":
+    #with st.chat_message("assistant"):
+        #with st.spinner("..."):
+            #response = st.session_state.chat_engine.chat(prompt)
+            #st.write(response.response)
+            #message = {"role": "assistant", "content": response.response}
+            #st.session_state.messages.append(message) # Add response to message history
+            #st.session_state.conversation_history.append(st.session_state.messages.copy()) # Append conversation history
 
-with st.sidebar.expander("Conversation History"):
-    for conversation in st.session_state.conversation_history:
-        for message in conversation:
-            if message["role"] == "user":
-                st.write("Bạn: " + message["content"])
-            else:
-                st.write("Chatbot: " + message["content"])
-        st.write("----")  # Separator between conversations
+#with st.sidebar.expander("Conversation History"):
+    #for conversation in st.session_state.conversation_history:
+        #for message in conversation:
+            #if message["role"] == "user":
+                #st.write("Bạn: " + message["content"])
+            #else:
+                #st.write("Chatbot: " + message["content"])
+        #st.write("----")  # Separator between conversations
