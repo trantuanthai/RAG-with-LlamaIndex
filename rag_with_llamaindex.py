@@ -24,7 +24,7 @@ def load_data():
         documents = SimpleDirectoryReader("./Data").load_data()
 
         # Define an LLM
-        llm = OpenAI(model="gpt-3.5")
+        llm = OpenAI(model="gpt-3.5", prompt="You are an admission advisory chatbot for universities that are members of the Vietnam National University Ho Chi Minh City, please provide accurate and detailed information about the majors of the schools for users who are parents and high school students.")
 
         # Build index with a chunk_size of 512
         node_parser = SimpleNodeParser.from_defaults(chunk_size=512)
